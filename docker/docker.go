@@ -24,16 +24,17 @@ const (
 
 // Image represents Docker image
 type Image struct {
-	Registry      string
-	Name          string
-	Tag           string
-	FsLayers      []FsLayer
-	Token         string
-	user          string
-	password      string
-	client        http.Client
-	digest        string
-	schemaVersion int
+	Registry       string
+	Name           string
+	Tag            string
+	FsLayers       []FsLayer
+	Token          string
+	user           string
+	password       string
+	client         http.Client
+	digest         string
+	schemaVersion  int
+	ManifestDigest string
 }
 
 func (i *Image) LayerName(index int) string {
@@ -262,6 +263,7 @@ func parseImageResponse(resp *http.Response, image *Image) error {
 		}
 		image.schemaVersion = imageV1.SchemaVersion
 	}
+	image.ManifestDigest = trimDigest(resp.Header.Get("Docker-Content-Digest"))
 	return nil
 }
 

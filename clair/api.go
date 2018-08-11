@@ -148,7 +148,7 @@ func (a *apiV1) Analyze(image *docker.Image) ([]*Vulnerability, error) {
 func (a *apiV3) Push(image *docker.Image) error {
 	req := &clairpb.PostAncestryRequest{
 		Format:       "Docker",
-		AncestryName: image.Name,
+		AncestryName: image.ManifestDigest,
 	}
 
 	ls := make([]*clairpb.PostAncestryRequest_PostLayer, len(image.FsLayers))
@@ -170,7 +170,7 @@ func newLayerV3(image *docker.Image, index int) *clairpb.PostAncestryRequest_Pos
 
 func (a *apiV3) Analyze(image *docker.Image) ([]*Vulnerability, error) {
 	req := &clairpb.GetAncestryRequest{
-		AncestryName:        image.Name,
+		AncestryName:        image.ManifestDigest,
 		WithFeatures:        true,
 		WithVulnerabilities: true,
 	}
